@@ -2,83 +2,30 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10年間の約束 - ニュージーランド時間監視</title>
+    <title>10年間の約束 - 精密監視システム</title>
     <style>
-        /* 马卡龙背景色：淡粉紫梯度 */
+        :root {
+            --macaron-pink: #ffb7c5;
+            --macaron-mint: #b2e2f2;
+            --canele-brown: #5d4037;
+            --canele-gold: #d2691e;
+            --bg-cream: #fff9f5;
+        }
         body { 
-            font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif; 
-            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
-            color: #5d4037; /* 可丽露深焦糖色文字 */
+            font-family: 'Hiragino Kaku Gothic Pro', sans-serif; 
+            background: linear-gradient(120deg, var(--macaron-pink) 0%, var(--macaron-mint) 100%); 
+            display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; color: var(--canele-brown); 
         }
-
-        /* 主容器：象牙白马卡龙感 */
         .monitor-box { 
-            background: rgba(255, 255, 255, 0.85);
-            padding: 40px; 
-            border-radius: 30px; 
-            box-shadow: 0 15px 35px rgba(226, 209, 195, 0.5); 
-            text-align: center; 
-            width: 85%; 
-            max-width: 650px; 
-            border: 5px solid #fff;
+            background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 600px; border: 4px solid #fff;
         }
-
-        h1 { 
-            font-size: 1.8em;
-            color: #d2691e; /* 焦糖橙 */
-            margin-bottom: 30px;
-            border-bottom: 2px solid #f8bbd0; /* 樱花粉色线 */
-            padding-bottom: 15px;
-        }
-
-        .label { 
-            color: #8d6e63; 
-            font-size: 1em; 
-            margin-top: 25px; 
-            font-weight: bold;
-        }
-
-        /* 时间显示：薄荷绿与草莓粉的对比 */
-        .time-display { 
-            font-size: 1.6em; 
-            margin: 15px 0; 
-            color: #4db6ac; /* 薄荷马卡龙色 */
-            background: #fff;
-            padding: 10px;
-            border-radius: 15px;
-            display: block;
-        }
-
-        /* 进度条：开心果绿背景 */
-        .progress-bar-bg { 
-            width: 100%; 
-            background: #f1f8e9; 
-            height: 25px; 
-            border-radius: 12px; 
-            margin-top: 15px; 
-            overflow: hidden; 
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* 进度填充：草莓马卡龙粉 */
-        #progress-fill { 
-            background: #f06292; 
-            height: 100%; 
-            width: 0%; 
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-
-        .date-info {
-            font-size: 0.85em;
-            color: #9e9e9e;
-        }
+        h1 { color: var(--canele-gold); border-bottom: 2px solid var(--macaron-pink); padding-bottom: 10px; font-size: 1.5em; }
+        .time-display { font-size: 1.4em; margin: 10px 0; color: #e91e63; font-weight: bold; background: #fff; padding: 10px; border-radius: 12px; }
+        .mil-display { font-size: 2em; color: var(--canele-gold); font-weight: 900; margin: 20px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .progress-bar-bg { width: 100%; background: #eee; height: 24px; border-radius: 12px; overflow: hidden; margin: 10px 0; }
+        #progress-fill { background: linear-gradient(90deg, var(--macaron-pink), var(--canele-gold)); height: 100%; width: 0%; transition: width 0.5s; }
+        .info-tag { font-size: 0.8em; color: #888; margin: 5px 0; }
     </style>
 </head>
 <body>
@@ -86,51 +33,50 @@
 <div class="monitor-box">
     <h1>10年間の資産・時間監視</h1>
     
-    <div class="date-info">
-        開始：2025年12月24日 (NZT)<br>
-        終了：2035年12月24日 (NZT)
-    </div>
+    <div class="info-tag">監視開始 (3日前): 2025-12-21 00:00 (NZT)</div>
+    <div class="info-tag">監視終了 (3日前): 2035-12-21 00:00 (NZT)</div>
 
-    <div class="label">経過時間：</div>
-    <div id="past-time" class="time-display">読み込み中...</div>
+    <div style="margin-top:20px;">経過時間 (経過率：‰)</div>
+    <div id="mil-rate" class="mil-display">0.000 ‰</div>
 
-    <div class="progress-bar-bg">
-        <div id="progress-fill"></div>
-    </div>
+    <div class="progress-bar-bg"><div id="progress-fill"></div></div>
 
-    <div class="label">残り時間：</div>
-    <div id="remain-time" class="time-display" style="color: #ec407a;">読み込み中...</div>
+    <div style="font-size: 0.9em; margin-top:20px;">残り時間カウントダウン:</div>
+    <div id="remain-time" class="time-display">読み込み中...</div>
 </div>
 
 <script>
-    function updateClock() {
-        // 新西兰时区设定
-        const start = new Date("2025-12-24T00:00:00+13:00").getTime();
-        const end = new Date("2035-12-24T00:00:00+13:00").getTime();
+    function update() {
+        // 提前3天的时间点 (2025-12-24 减去 3天 = 12-21)
+        const start = new Date("2025-12-21T00:00:00+13:00").getTime();
+        const end = new Date("2035-12-21T00:00:00+13:00").getTime();
         const now = new Date().getTime();
 
+        const total = end - start;
         const passed = now - start;
         const remain = end - now;
 
+        // 计算千分比 (Permille ‰)
+        // 计算公式：(过去时间 / 总时间) * 1000
+        let milRate = (passed / total) * 1000;
+        milRate = Math.min(Math.max(milRate, 0), 1000); // 限制在0-1000之间
+
         function formatTime(ms) {
-            if (ms < 0) return "未開始または終了";
-            const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-            return `${days}日 ${hours}時間 ${minutes}分 ${seconds}秒`;
+            if (ms < 0) return "期間外";
+            const d = Math.floor(ms / 86400000);
+            const h = Math.floor((ms % 86400000) / 3600000);
+            const m = Math.floor((ms % 3600000) / 60000);
+            const s = Math.floor((ms % 60000) / 1000);
+            return `${d}日 ${h}時間 ${m}分 ${s}秒`;
         }
 
-        document.getElementById('past-time').innerText = formatTime(passed);
+        document.getElementById('mil-rate').innerText = milRate.toFixed(3) + " ‰";
         document.getElementById('remain-time').innerText = formatTime(remain);
-
-        const totalDuration = end - start;
-        const percentage = (passed / totalDuration) * 100;
-        document.getElementById('progress-fill').style.width = Math.min(Math.max(percentage, 0), 100) + "%";
+        document.getElementById('progress-fill').style.width = (milRate / 10) + "%";
     }
 
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(update, 100); // 提高刷新频率到0.1秒，让千分位跳动更平滑
+    update();
 </script>
 
 </body>
