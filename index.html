@@ -1,70 +1,134 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>十年之约 - 新西兰时间进度监控</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10年間の約束 - ニュージーランド時間監視</title>
     <style>
-        body { font-family: 'Courier New', monospace; background: #1a1a1a; color: #00ff00; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .monitor-box { border: 2px solid #00ff00; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); text-align: center; width: 80%; max-width: 600px; }
-        .label { color: #888; font-size: 0.9em; margin-top: 20px; }
-        .time-display { font-size: 1.8em; margin: 10px 0; color: #ffcc00; }
-        .progress-bar-bg { width: 100%; background: #333; height: 20px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
-        #progress-fill { background: #00ff00; height: 100%; width: 0%; transition: width 0.5s; }
-        h1 { border-bottom: 1px solid #333; padding-bottom: 10px; color: #fff; }
+        /* 马卡龙背景色：淡粉紫梯度 */
+        body { 
+            font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif; 
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            color: #5d4037; /* 可丽露深焦糖色文字 */
+        }
+
+        /* 主容器：象牙白马卡龙感 */
+        .monitor-box { 
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px; 
+            border-radius: 30px; 
+            box-shadow: 0 15px 35px rgba(226, 209, 195, 0.5); 
+            text-align: center; 
+            width: 85%; 
+            max-width: 650px; 
+            border: 5px solid #fff;
+        }
+
+        h1 { 
+            font-size: 1.8em;
+            color: #d2691e; /* 焦糖橙 */
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f8bbd0; /* 樱花粉色线 */
+            padding-bottom: 15px;
+        }
+
+        .label { 
+            color: #8d6e63; 
+            font-size: 1em; 
+            margin-top: 25px; 
+            font-weight: bold;
+        }
+
+        /* 时间显示：薄荷绿与草莓粉的对比 */
+        .time-display { 
+            font-size: 1.6em; 
+            margin: 15px 0; 
+            color: #4db6ac; /* 薄荷马卡龙色 */
+            background: #fff;
+            padding: 10px;
+            border-radius: 15px;
+            display: block;
+        }
+
+        /* 进度条：开心果绿背景 */
+        .progress-bar-bg { 
+            width: 100%; 
+            background: #f1f8e9; 
+            height: 25px; 
+            border-radius: 12px; 
+            margin-top: 15px; 
+            overflow: hidden; 
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 进度填充：草莓马卡龙粉 */
+        #progress-fill { 
+            background: #f06292; 
+            height: 100%; 
+            width: 0%; 
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        .date-info {
+            font-size: 0.85em;
+            color: #9e9e9e;
+        }
     </style>
 </head>
 <body>
 
 <div class="monitor-box">
-    <h1>十年资产/时间跨度监控</h1>
+    <h1>10年間の資産・時間監視</h1>
     
-    <div class="label">起点：2025-12-24 (NZT)</div>
-    <div class="label">终点：2035-12-24 (NZT)</div>
+    <div class="date-info">
+        開始：2025年12月24日 (NZT)<br>
+        終了：2035年12月24日 (NZT)
+    </div>
 
-    <div class="label">已经过去：</div>
-    <div id="past-time" class="time-display">计算中...</div>
+    <div class="label">経過時間：</div>
+    <div id="past-time" class="time-display">読み込み中...</div>
 
     <div class="progress-bar-bg">
         <div id="progress-fill"></div>
     </div>
 
-    <div class="label">剩余倒计时：</div>
-    <div id="remain-time" class="time-display">计算中...</div>
+    <div class="label">残り時間：</div>
+    <div id="remain-time" class="time-display" style="color: #ec407a;">読み込み中...</div>
 </div>
 
 <script>
     function updateClock() {
-        // 设定新西兰时区的特定时间点
+        // 新西兰时区设定
         const start = new Date("2025-12-24T00:00:00+13:00").getTime();
         const end = new Date("2035-12-24T00:00:00+13:00").getTime();
-        
-        // 获取当前时间（浏览器会自动根据系统时区转换，但此处我们计算绝对值）
         const now = new Date().getTime();
 
-        // 1. 计算已经过去的时间
         const passed = now - start;
-        // 2. 计算剩余的时间
         const remain = end - now;
 
         function formatTime(ms) {
-            if (ms < 0) return "尚未开始或已结束";
+            if (ms < 0) return "未開始または終了";
             const days = Math.floor(ms / (1000 * 60 * 60 * 24));
             const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-            return `${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+            return `${days}日 ${hours}時間 ${minutes}分 ${seconds}秒`;
         }
 
         document.getElementById('past-time').innerText = formatTime(passed);
         document.getElementById('remain-time').innerText = formatTime(remain);
 
-        // 更新进度条
         const totalDuration = end - start;
         const percentage = (passed / totalDuration) * 100;
         document.getElementById('progress-fill').style.width = Math.min(Math.max(percentage, 0), 100) + "%";
     }
 
-    // 每秒更新一次
     setInterval(updateClock, 1000);
     updateClock();
 </script>
