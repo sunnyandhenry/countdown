@@ -2,52 +2,79 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>10年間の約束 - 精密監視システム</title>
+    <title>10-Year Asset & Coin Monitor</title>
     <style>
         :root {
             --macaron-pink: #ffb7c5;
             --macaron-mint: #b2e2f2;
             --canele-brown: #5d4037;
             --canele-gold: #d2691e;
-            --bg-cream: #fff9f5;
         }
         body { 
-            font-family: 'Hiragino Kaku Gothic Pro', sans-serif; 
-            background: linear-gradient(120deg, var(--macaron-pink) 0%, var(--macaron-mint) 100%); 
+            font-family: 'Helvetica Neue', 'Hiragino Sans', sans-serif; 
+            background: linear-gradient(135deg, var(--macaron-pink) 0%, var(--macaron-mint) 100%); 
             display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; color: var(--canele-brown); 
         }
         .monitor-box { 
-            background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 600px; border: 4px solid #fff;
+            background: rgba(255, 255, 255, 0.94); padding: 40px; border-radius: 35px; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.12); text-align: center; width: 90%; max-width: 550px; border: 2px solid #fff;
         }
-        h1 { color: var(--canele-gold); border-bottom: 2px solid var(--macaron-pink); padding-bottom: 10px; font-size: 1.5em; }
-        .time-display { font-size: 1.4em; margin: 10px 0; color: #e91e63; font-weight: bold; background: #fff; padding: 10px; border-radius: 12px; }
-        .mil-display { font-size: 2em; color: var(--canele-gold); font-weight: 900; margin: 20px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .progress-bar-bg { width: 100%; background: #eee; height: 24px; border-radius: 12px; overflow: hidden; margin: 10px 0; }
-        #progress-fill { background: linear-gradient(90deg, var(--macaron-pink), var(--canele-gold)); height: 100%; width: 0%; transition: width 0.5s; }
-        .info-tag { font-size: 0.8em; color: #888; margin: 5px 0; }
+        h1 { color: var(--canele-gold); font-size: 1.4em; margin-bottom: 20px; letter-spacing: 1px; }
+
+        /* 金币显示区块 */
+        .coin-box {
+            background: #fff8e1; border: 2px solid #ffca28; border-radius: 20px; padding: 15px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+        }
+        .coin-icon { font-size: 2.5em; }
+        .coin-text { text-align: left; }
+        .coin-count { font-size: 2em; color: #ffa000; font-weight: 900; }
+
+        .yield-panel {
+            background: #fff; border-radius: 20px; padding: 20px; margin: 15px 0;
+            border: 1px solid var(--macaron-pink);
+        }
+        .yield-value { font-size: 2.5em; color: #e91e63; font-weight: 900; font-family: 'Courier New', monospace; }
+
+        .progress-bar-bg { width: 100%; background: #f0f0f0; height: 10px; border-radius: 5px; overflow: hidden; margin: 15px 0; }
+        #progress-fill { background: linear-gradient(90deg, #f06292, var(--canele-gold)); height: 100%; width: 0%; transition: width 0.3s; }
+        .mil-value { font-size: 1.2em; font-weight: bold; color: var(--canele-brown); }
     </style>
 </head>
 <body>
 
 <div class="monitor-box">
-    <h1>10年間の資産・時間監視</h1>
-    
-    <div class="info-tag">監視開始 (3日前): 2025-12-21 00:00 (NZT)</div>
-    <div class="info-tag">監視終了 (3日前): 2035-12-21 00:00 (NZT)</div>
+    <h1>10年間の資産・コイン監視</h1>
 
-    <div style="margin-top:20px;">経過時間 (経過率：‰)</div>
-    <div id="mil-rate" class="mil-display">0.000 ‰</div>
+    <div class="coin-box">
+        <div class="coin-icon">🪙</div>
+        <div class="coin-text">
+            <div style="font-size: 0.8em; color: #8d6e63;">現在の獲得コイン数</div>
+            <div id="coin-total" class="coin-count">0</div>
+        </div>
+    </div>
+    
+    <div style="font-size: 0.8em; color: #888;">START: 2025.12.21 | END: 2035.12.21</div>
+
+    <div class="yield-panel">
+        <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">現在の資産価値 (10年=1000円)</div>
+        <div id="earned-cash" class="yield-value">¥ 0.0000</div>
+        <div style="font-size: 0.75em; color: var(--canele-gold); margin-top: 5px;">3.6525日ごとに 1枚 増加</div>
+    </div>
+
+    <div>
+        <span style="font-size: 0.8em;">進捗率: </span>
+        <span id="mil-rate" class="mil-value">0.000</span><span style="font-size: 0.8em;"> ‰</span>
+    </div>
 
     <div class="progress-bar-bg"><div id="progress-fill"></div></div>
 
-    <div style="font-size: 0.9em; margin-top:20px;">残り時間カウントダウン:</div>
-    <div id="remain-time" class="time-display">読み込み中...</div>
+    <div style="font-size: 0.8em; color: #a1887f;">終了までの残り時間</div>
+    <div id="remain-time" style="font-weight: bold; margin-top: 5px;">0000日 00時間 00分 00秒</div>
 </div>
 
 <script>
     function update() {
-        // 提前3天的时间点 (2025-12-24 减去 3天 = 12-21)
         const start = new Date("2025-12-21T00:00:00+13:00").getTime();
         const end = new Date("2035-12-21T00:00:00+13:00").getTime();
         const now = new Date().getTime();
@@ -56,13 +83,19 @@
         const passed = now - start;
         const remain = end - now;
 
-        // 计算千分比 (Permille ‰)
-        // 计算公式：(过去时间 / 总时间) * 1000
+        // 1. 千分比
         let milRate = (passed / total) * 1000;
-        milRate = Math.min(Math.max(milRate, 0), 1000); // 限制在0-1000之间
+        milRate = Math.min(Math.max(milRate, 0), 1000);
+
+        // 2. 现金/金币计算 (10年 = 1000元/1000枚)
+        let cashEarned = (passed / total) * 1000;
+        cashEarned = Math.max(0, cashEarned);
+        
+        // 取整数作为金币数量
+        let coins = Math.floor(cashEarned);
 
         function formatTime(ms) {
-            if (ms < 0) return "期間外";
+            if (ms < 0) return "TERMINATED";
             const d = Math.floor(ms / 86400000);
             const h = Math.floor((ms % 86400000) / 3600000);
             const m = Math.floor((ms % 3600000) / 60000);
@@ -70,12 +103,14 @@
             return `${d}日 ${h}時間 ${m}分 ${s}秒`;
         }
 
-        document.getElementById('mil-rate').innerText = milRate.toFixed(3) + " ‰";
+        document.getElementById('coin-total').innerText = coins + " 枚";
+        document.getElementById('mil-rate').innerText = milRate.toFixed(3);
+        document.getElementById('earned-cash').innerText = "¥ " + cashEarned.toFixed(4);
         document.getElementById('remain-time').innerText = formatTime(remain);
         document.getElementById('progress-fill').style.width = (milRate / 10) + "%";
     }
 
-    setInterval(update, 100); // 提高刷新频率到0.1秒，让千分位跳动更平滑
+    setInterval(update, 100);
     update();
 </script>
 
