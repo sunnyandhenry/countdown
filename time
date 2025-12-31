@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>十年之约 - 新西兰时间进度监控</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #1a1a1a; color: #00ff00; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .monitor-box { border: 2px solid #00ff00; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); text-align: center; width: 80%; max-width: 600px; }
+        .label { color: #888; font-size: 0.9em; margin-top: 20px; }
+        .time-display { font-size: 1.8em; margin: 10px 0; color: #ffcc00; }
+        .progress-bar-bg { width: 100%; background: #333; height: 20px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        #progress-fill { background: #00ff00; height: 100%; width: 0%; transition: width 0.5s; }
+        h1 { border-bottom: 1px solid #333; padding-bottom: 10px; color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="monitor-box">
+    <h1>十年资产/时间跨度监控</h1>
+    
+    <div class="label">起点：2025-12-24 (NZT)</div>
+    <div class="label">终点：2035-12-24 (NZT)</div>
+
+    <div class="label">已经过去：</div>
+    <div id="past-time" class="time-display">计算中...</div>
+
+    <div class="progress-bar-bg">
+        <div id="progress-fill"></div>
+    </div>
+
+    <div class="label">剩余倒计时：</div>
+    <div id="remain-time" class="time-display">计算中...</div>
+</div>
+
+<script>
+    function updateClock() {
+        // 设定新西兰时区的特定时间点
+        const start = new Date("2025-12-24T00:00:00+13:00").getTime();
+        const end = new Date("2035-12-24T00:00:00+13:00").getTime();
+        
+        // 获取当前时间（浏览器会自动根据系统时区转换，但此处我们计算绝对值）
+        const now = new Date().getTime();
+
+        // 1. 计算已经过去的时间
+        const passed = now - start;
+        // 2. 计算剩余的时间
+        const remain = end - now;
+
+        function formatTime(ms) {
+            if (ms < 0) return "尚未开始或已结束";
+            const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+            return `${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+        }
+
+        document.getElementById('past-time').innerText = formatTime(passed);
+        document.getElementById('remain-time').innerText = formatTime(remain);
+
+        // 更新进度条
+        const totalDuration = end - start;
+        const percentage = (passed / totalDuration) * 100;
+        document.getElementById('progress-fill').style.width = Math.min(Math.max(percentage, 0), 100) + "%";
+    }
+
+    // 每秒更新一次
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
+
+</body>
+</html>
